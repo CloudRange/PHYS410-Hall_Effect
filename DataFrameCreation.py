@@ -38,6 +38,7 @@ def create_dataframe(path):
                 main_data = np.vstack((main_data, temp_line))
 
     df = pd.DataFrame(data=main_data[1:, :], columns=main_data[0])
+    df.to_csv('Data.csv', encoding='utf-8', index = False)
     return df
 
 path = "Data_Testing/"
