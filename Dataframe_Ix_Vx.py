@@ -7,7 +7,11 @@ import re
 
 
 
+<<<<<<< HEAD
 def create_dataframe_rho(path, fnameout):
+=======
+def create_dataframe_rho(path):
+>>>>>>> master
     files = glob.glob(path + "/*.dat")
     initialization12_43 = False
     initialization14_23 = False
@@ -69,6 +73,7 @@ def create_dataframe_rho(path, fnameout):
     df_12_43 = pd.DataFrame(data=main_data12_43[1:, :], columns=main_data12_43[0])
     df_14_23 = pd.DataFrame(data=main_data14_23[1:, :], columns=main_data14_23[0])
 
+<<<<<<< HEAD
     if len(fnameout) != 2:
         fnameout = ['Data_12_43.csv', 'Data_14_23.csv']
     
@@ -81,3 +86,14 @@ if __name__ == "__main__":
     path = "IV_Data/"
     
     create_dataframe_rho(path)
+=======
+    df_12_43.to_csv('Data_12_43.csv', encoding='utf-8', index=False)
+    df_14_23.to_csv('Data_14_23.csv', encoding='utf-8', index=False)
+
+    return
+
+
+path = "IV_Data/"
+
+create_dataframe_rho(path)
+>>>>>>> master
