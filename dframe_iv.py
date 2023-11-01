@@ -7,7 +7,11 @@ import re
 
 
 
-def create_dataframe_rho(path, fnameout):
+def create_dataframe_rho(path, 
+                         fnameout = ['Data_12_43.csv', 'Data_14_23.csv']):
+    """
+    Creates a csv file of iv files
+    """
     files = glob.glob(path + "/*.dat")
     initialization12_43 = False
     initialization14_23 = False
@@ -68,9 +72,6 @@ def create_dataframe_rho(path, fnameout):
 
     df_12_43 = pd.DataFrame(data=main_data12_43[1:, :], columns=main_data12_43[0])
     df_14_23 = pd.DataFrame(data=main_data14_23[1:, :], columns=main_data14_23[0])
-
-    if len(fnameout) != 2:
-        fnameout = ['Data_12_43.csv', 'Data_14_23.csv']
     
     df_12_43.to_csv(fnameout[0], encoding='utf-8', index=False)
     df_14_23.to_csv(fnameout[1], encoding='utf-8', index=False)
