@@ -7,11 +7,7 @@ import re
 
 
 
-<<<<<<< HEAD
 def create_dataframe_rho(path, fnameout):
-=======
-def create_dataframe_rho(path):
->>>>>>> master
     files = glob.glob(path + "/*.dat")
     initialization12_43 = False
     initialization14_23 = False
