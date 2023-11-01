@@ -4,8 +4,43 @@ from io import StringIO
 import glob
 import re
 
+import os.path
+import os
 
 
+def create_df_iv(path, i_conf: str, v_conf: str):
+    """
+    creates a dataframe of iv datfiles with the same configuration
+    as i_conf and v_conf
+    """
+    EXT = ".dat"
+    conf = f"I{i_conf}_V{v_conf}"
+    files = [os.path.join(path, file) for file in os.listdir(path) 
+             if (conf in file and EXT in file)]
+    headers = []
+
+    with open(files[0], "r") as f:
+        headers = np.array(f.readlines()[1].strip().split("\t"))
+
+    headers = np.append(headers, ["MF (KGs)", "STD (KGs)"])
+
+    out = pd.DataFrame(columns = headers)
+
+    for file in files:
+        mfs = []
+        text = []
+        with open(file, "r") as f:
+            lines = f.readlines()
+            mfs = re.findall(r"(\d+\.\d{2,})", lines[0])
+            text = lines[2].strip().split("\t")
+
+        text = np.array([float(t) for t in text])
+        mfs  = np.array([float(mf) for mf in mfs])
+        text = np.append(text, mfs)
+
+        out.loc[len(out)] = text
+            
+    return out
 
 def create_dataframe_rho(path, 
                          fnameout = ['Data_12_43.csv', 'Data_14_23.csv']):
