@@ -5,11 +5,11 @@ import glob
 import re
 
 
-def get_fx_approximation(x):
+def get_f_approx(x):
     return (np.cosh(np.log(x) / 2.403)) ** (-1)
 
 
-def get_sampleResistivity(R43, R23, d, f):
+def get_sample_resistivity(R43, R23, d, f):
     return ((np.pi * d) / np.log(2)) * ((R43 + R23) / 2) * f
 
 
