@@ -29,16 +29,18 @@ def create_df_iv(path, i_conf: str, v_conf: str):
     for file in files:
         mfs = []
         text = []
+        lines = []
         with open(file, "r") as f:
             lines = f.readlines()
-            mfs = re.findall(r"(\d+\.\d{2,})", lines[0])
-            text = lines[2].strip().split("\t")
+            
+        mfs = re.findall(r"(\d+\.\d{2,})", lines[0])
+        text = [line.strip().split("\t") for line in lines[2:]]
 
-        text = np.array([float(t) for t in text])
-        mfs  = np.array([float(mf) for mf in mfs])
-        text = np.append(text, mfs)
-
-        out.loc[len(out)] = text
+        for t in text:
+            w = np.array([float(el) for el in t])
+            mfs  = np.array([float(mf) for mf in mfs])
+            w = np.append(w, mfs)
+            out.loc[len(out)] = w
             
     return out
 
