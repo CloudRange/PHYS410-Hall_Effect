@@ -6,7 +6,7 @@ import re
 
 
 def get_f_approx(x):
-    return (np.cosh(np.log(x) / 2.403)) ** (-1)
+    return 1 / (np.cosh(np.log(x) / 2.403))
 
 
 def get_sample_resistivity(R43, R23, d, f):
