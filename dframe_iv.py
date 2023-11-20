@@ -23,6 +23,17 @@ def create_df_iv(path, i_conf: str, v_conf: str):
         headers = np.array(f.readlines()[1].strip().split("\t"))
 
     headers = np.append(headers, ["MF (KGs)", "STD (KGs)"])
+        # header renaming
+    for idx, header in enumerate(headers):
+        if header.startswith("V") or header.startswith("I"):
+            edge: str = re.findall(r"([1-4][1-4])", header)[0]
+            headers[idx] = f"{header[0]}{edge}_m{'A' if header.startswith('I') else 'V'}"
+        elif not header.startswith("STD"):
+            units = re.findall(r"\(([A-Za-z]{0,2}[A-Za-z])\)", header)[0]
+            title = re.findall(r"([A-Z][A-Za-z]*) ", header)[0]
+            headers[idx] = f"{title}_{units}"
+        else:
+            headers[idx] = f"e{headers[idx - 1]}"
 
     out = pd.DataFrame(columns = headers)
 
