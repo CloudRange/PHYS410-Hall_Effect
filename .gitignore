@@ -1,2 +1,4 @@
 .idea/
 .jup*
+__pycache__/
+.ipynb_checkpoints/

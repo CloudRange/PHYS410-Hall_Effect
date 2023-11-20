@@ -4,10 +4,51 @@ from io import StringIO
 import glob
 import re
 
+import os.path
+import os
 
 
+def create_df_iv(path, i_conf: str, v_conf: str):
+    """
+    creates a dataframe of iv datfiles with the same configuration
+    as i_conf and v_conf
+    """
+    EXT = ".dat"
+    conf = f"I{i_conf}_V{v_conf}"
+    files = [os.path.join(path, file) for file in os.listdir(path) 
+             if (conf in file and EXT in file)]
+    headers = []
 
-def create_dataframe_rho(path):
+    with open(files[0], "r") as f:
+        headers = np.array(f.readlines()[1].strip().split("\t"))
+
+    headers = np.append(headers, ["MF (KGs)", "STD (KGs)"])
+
+    out = pd.DataFrame(columns = headers)
+
+    for file in files:
+        mfs = []
+        text = []
+        lines = []
+        with open(file, "r") as f:
+            lines = f.readlines()
+            
+        mfs = re.findall(r"(\d+\.\d{2,})", lines[0])
+        text = [line.strip().split("\t") for line in lines[2:]]
+
+        for t in text:
+            w = np.array([float(el) for el in t])
+            mfs  = np.array([float(mf) for mf in mfs])
+            w = np.append(w, mfs)
+            out.loc[len(out)] = w
+            
+    return out
+
+def create_dataframe_rho(path, 
+                         fnameout = ['Data_12_43.csv', 'Data_14_23.csv']):
+    """
+    Creates a csv file of iv files
+    """
     files = glob.glob(path + "/*.dat")
     initialization12_43 = False
     initialization14_23 = False
@@ -68,13 +109,13 @@ def create_dataframe_rho(path):
 
     df_12_43 = pd.DataFrame(data=main_data12_43[1:, :], columns=main_data12_43[0])
     df_14_23 = pd.DataFrame(data=main_data14_23[1:, :], columns=main_data14_23[0])
-
-    df_12_43.to_csv('Data_12_43.csv', encoding='utf-8', index=False)
-    df_14_23.to_csv('Data_14_23.csv', encoding='utf-8', index=False)
+    
+    df_12_43.to_csv(fnameout[0], encoding='utf-8', index=False)
+    df_14_23.to_csv(fnameout[1], encoding='utf-8', index=False)
 
     return
 
-
-path = "IV_Data/"
-
-create_dataframe_rho(path)
+if __name__ == "__main__":
+    path = "IV_Data/"
+    
+    create_dataframe_rho(path)
