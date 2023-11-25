@@ -54,6 +54,62 @@ def create_df_iv(path, i_conf: str, v_conf: str):
             out.loc[len(out)] = w
             
     return out
+    
+def init_rho_df(df, rho, erho):
+    df_rho = pd.DataFrame()
+    df_rho["Temperature_C"]     = df["Temperature_C"]
+    df_rho["eTemperature_C"]    = df["eTemperature_C"]
+    df_rho["MF_KGs"]            = df["MF_KGs"]
+    df_rho["eMF_KGs"]           = df["eMF_KGs"]
+    df_rho["Resistivity_Ohmm"]  = rho
+    df_rho["eResistivity_Ohmm"] = erho
+
+    return df_rho
+
+def init_n_df(df, n, en):
+    df_density = pd.DataFrame()
+    df_density["Temperature_C"]  = df["Temperature_C"]
+    df_density["eTemperature_C"] = df["eTemperature_C"]
+    df_density["MF_KGs"]         = df["MF_KGs"]
+    df_density["eMF_KGs"]        = df["eMF_KGs"]
+    df_density["Density_C/m3"]   = n
+    df_density["eDensity_C/m3"]  = en
+
+    return df_density
+
+def align_rho(df_density, df_rho):
+    """returns a new dataframe with added resitivity columns"""
+    delta = .5
+    rho_temp = []
+    rho = []
+    erho = []
+
+    for i in df_density["Temperature_C"]:
+        df_temp = df_rho
+        df_temp = df_temp[df_temp["Temperature_C"] > (i - delta)]
+        df_temp = df_temp[df_temp["Temperature_C"] < (i + delta)]
+
+        if df_temp.empty:
+            print("error_{}".format(i))
+        else:
+            rho_temp.append(df_temp["Temperature_C"].iloc[[-1]].values[0])
+            rho.append(df_temp["Resistivity_Ohmm"].iloc[[-1]].values[0])
+            erho.append(df_temp["eResistivity_Ohmm"].iloc[[-1]].values[0])
+
+    df_out = df_density
+    df_out["Resistivity_Ohmm"]  = rho
+    df_out["eResistivity_Ohmm"] = erho
+    
+    return df_density
+
+
+def get_mobility(df_rho)
+    x = 1 / (df_rho["Density_C/m3"] * df_rho["Resistivity_Ohmm"] * e)
+    
+    ex = abs(x * ((df["eDensity_C/m3"] / df["Density_C/m3"]) ** 2 \
+                + (df["eRho"] / df["Rho"]) ** 2) **.5)
+    return x, ex
+
 
 def create_dataframe_rho(path, 
                          fnameout = ['Data_12_43.csv', 'Data_14_23.csv']):
