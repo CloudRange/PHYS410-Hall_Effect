@@ -103,7 +103,7 @@ def align_rho(df_density, df_rho):
     return df_density
 
 
-def get_mobility(df_rho)
+def get_mobility(df_rho):
     x = 1 / (df_rho["Density_C/m3"] * df_rho["Resistivity_Ohmm"] * e)
     
     ex = abs(x * ((df["eDensity_C/m3"] / df["Density_C/m3"]) ** 2 \
